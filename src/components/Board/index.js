@@ -1,12 +1,35 @@
 import { actionItemClick } from "@/slice/menuSlice";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { COLORS, MENU_ITEMS } from "../constants";
 
 const Board = () => {
     const canvasRef = useRef(null);
     const shouldDraw = useRef(false);
-    const activeMenuItem = useSelector(state => state.menu.activeMenuItem);
-    const { color, size } = useSelector(state => state.toolbox[activeMenuItem]);
+    const { activeMenuItem, actionMenuItem } = useSelector(state => state.menu);
+    const { color, size } = useSelector(state => {
+        return state.toolbox[activeMenuItem] || {}
+    });
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!canvasRef.current)
+            return;
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        if (actionMenuItem === MENU_ITEMS.DOWNLOAD) {
+            const URL = canvas.toDataURL(); //convert canvas into an image
+            // console.log('Mukund URL image = ', URL);
+            const anchor = document.createElement('a');
+            anchor.href = URL;
+            anchor.download = 'mukund_drawing_board.jpg';
+            anchor.click();
+
+            //coz this useeffect triggers on actionMenuItem change but on 2nd download 
+            //button click it will not download file again
+            dispatch(actionItemClick(null));
+        }
+    }, [actionMenuItem]);
 
     useEffect(() => {
         if (!canvasRef.current)
