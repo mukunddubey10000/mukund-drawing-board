@@ -6,12 +6,14 @@ import { COLORS, MENU_ITEMS } from "../constants";
 const Board = () => {
     const canvasRef = useRef(null);
     const shouldDraw = useRef(false);
+    const drawHistory = useRef([]);
+    const historyPointer = useRef(0);
     const { activeMenuItem, actionMenuItem } = useSelector(state => state.menu);
     const { color, size } = useSelector(state => {
         return state.toolbox[activeMenuItem] || {}
     });
     const dispatch = useDispatch();
-
+    console.log('Mukund actionMenuItem = ', actionMenuItem);
     useEffect(() => {
         if (!canvasRef.current)
             return;
@@ -24,12 +26,22 @@ const Board = () => {
             anchor.href = URL;
             anchor.download = 'mukund_drawing_board.jpg';
             anchor.click();
+        } else if (actionMenuItem === MENU_ITEMS.UNDO || actionMenuItem === MENU_ITEMS.REDO) {
+            console.log('Mukund = ', historyPointer.current);
+            if (historyPointer.current > 0 && actionMenuItem === MENU_ITEMS.UNDO)
+                historyPointer.current -= 1;
 
-            //coz this useeffect triggers on actionMenuItem change but on 2nd download 
-            //button click it will not download file again
-            dispatch(actionItemClick(null));
+            if (historyPointer.current < drawHistory.current.length - 1 && actionMenuItem === MENU_ITEMS.REDO)
+                historyPointer.current += 1;
+
+            const imageData = drawHistory.current[historyPointer.current];
+            context.putImageData(imageData, 0, 0);
         }
-    }, [actionMenuItem]);
+
+        //coz this useeffect triggers on actionMenuItem change but on 2nd download
+        //button click it will not download file again
+        dispatch(actionItemClick(null));
+    }, [actionMenuItem, dispatch]);
 
     useEffect(() => {
         if (!canvasRef.current)
@@ -46,6 +58,7 @@ const Board = () => {
 
     //coz this runs before useEffect & want to calculate dimensions so do it first
     useLayoutEffect(() => {
+        //Read about canvas a bit more from MDN
         if (!canvasRef.current)
             return;
         const canvas = canvasRef.current;
@@ -68,6 +81,11 @@ const Board = () => {
         }
         const handleMouseUp = (e) => {
             shouldDraw.current = false;
+            //for history just push current changes that are done
+            //done changes matlab when mouse is moved up
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            drawHistory.current.push(imageData);
+            historyPointer.current = drawHistory.current.length - 1;
         }
         //Draw when user does mouseDown & continue on mouseMove & only release when mouseUp
         canvas.addEventListener('mousedown', handleMouseDown);
