@@ -56,6 +56,7 @@ const Board = () => {
             changeConfig(config.color, config.size)
         }
         changeConfig(color, size)
+        //emit changeConfig when brush or color is change from toolBox
         socket.on('changeConfig', handleChangeConfig)
 
         return () => {
