@@ -31,8 +31,12 @@ const Board = () => {
         } else if (actionMenuItem === MENU_ITEMS.UNDO || actionMenuItem === MENU_ITEMS.REDO) {
             if (historyPointer.current > 0 && actionMenuItem === MENU_ITEMS.UNDO) historyPointer.current -= 1
             if (historyPointer.current < drawHistory.current.length - 1 && actionMenuItem === MENU_ITEMS.REDO) historyPointer.current += 1
-            const imageData = drawHistory.current[historyPointer.current]
-            context.putImageData(imageData, 0, 0)
+            const imageData = drawHistory.current[historyPointer.current];
+            if (imageData)
+                context.putImageData(imageData, 0, 0)
+            else {
+                //alert user by a toast message
+            }
             // console.log('Mukund = ', historyPointer.current);
         }
 
@@ -74,6 +78,9 @@ const Board = () => {
 
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
+
+        // context.fillStyle = "#FFA500"; // Change to your desired color
+        // context.fillRect(0, 0, canvas.width, canvas.height); // Fill the entire canvas
 
         const beginPath = (x, y) => {
             context.beginPath()
