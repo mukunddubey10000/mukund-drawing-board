@@ -6,15 +6,22 @@ import styles from "./index.module.css";
 
 import { MENU_ITEMS } from "../constants";
 import { menuItemClick, actionItemClick } from "@/slice/menuSlice";
+import useNotification from "@/hooks/useNotification";
 
 const Menu = () => {
     const dispatch = useDispatch();
     const activeMenuItem = useSelector(state => state.menu.activeMenuItem);
 
+    //custom hooks
+    const { Notification, triggerNotification } = useNotification();
+
     const handleMenuClick = (itemName) => {
         dispatch(menuItemClick(itemName));
     };
     const handleMenuActionClick = (itemName) => {
+        // if (itemName === MENU_ITEMS.UNDO) {
+        //     triggerNotification({ duration: 1000, message: "UNDO" });
+        // }
         dispatch(actionItemClick(itemName));
     }
 

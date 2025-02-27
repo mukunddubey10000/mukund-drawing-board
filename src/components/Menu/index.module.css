@@ -1,21 +1,23 @@
 /* why index.module.css?? */
 .menuContainer {
 	@apply absolute px-5 py-1 flex justify-between w-1/4 left-1/2 top-10 rounded-md;
-    border: 1px solid theme('colors.border1');
-    transform: translateX(-50%); /*since left is 1/2 above so move the center of this comp by -50%*/
-    box-shadow: them('colors.shadow1');
-    background-color: theme('colors.background1');
+	border: 1px solid theme("colors.border1");
+	transform: translateX(
+		-50%
+	); /*since left is 1/2 above so move the center of this comp by -50%*/
+	box-shadow: them("colors.shadow1");
+	background-color: theme("colors.background1");
 
-    .iconWrapper{
-        @apply cursor-pointer flex justify-center items-center h-10 w-10 rounded-md;
-        /* To use below nesting in tailwind css follow this https://tailwindcss.com/docs/using-with-preprocessors */
-        &:hover, &.active{
-            background-color: theme('colors.text2');
-        }
-        .icon {
-            color: theme('colors.text1');
-            font-size: 20px;
-        }
-    }
-
+	.iconWrapper {
+		@apply cursor-pointer flex justify-center items-center h-10 w-10 rounded-md;
+		/* To use below nesting in tailwind css follow this https://tailwindcss.com/docs/using-with-preprocessors */
+		&:hover,
+		&.active {
+			background-color: theme("colors.text2");
+		}
+		.icon {
+			color: theme("colors.text1");
+			font-size: 20px;
+		}
+	}
 }
